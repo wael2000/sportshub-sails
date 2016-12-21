@@ -1,0 +1,73 @@
+<div>
+<% if(msg=="") { %>
+<div class="alert alert-info" style="display: none" id="infoMessage"><%=msg%></div>
+<% } else { %>
+<div class="alert alert-info" id="infoMessage"><%=msg%></div>
+<% }  %>
+<h3> SportsHuber </h3>
+<form action="/sportsHuber/list" method="post">
+<div class="form-group">
+	<label for="name">Name </label>
+	<input value="<%=search?search:''%>" name="search" class="form-control" id="search" placeholder="Search by Name/mobile/email">
+	<input name="id" id="id" type="hidden">
+</div>
+<input class="btn btn-success" type="submit" value="Search">
+<a href="/sportsHuber/create" class="btn btn-info">New</a>
+</form>
+</div>
+<div>
+<h3> SportsHuber List </h3>
+<table class="table table-stripped" id="myTable">
+<tr class="info">
+<th> ID </th>
+<th> First Name </th>
+<th> Last Name </th>
+<th> Nationality </th>
+<th> Mobile </th>
+<th> Email </th>
+<th> Actions </th>
+</tr>
+<%_.each(sportsHubers, function(sportsHuber) { %>
+<tr>
+<td>
+<%= sportsHuber.id %>
+</td>
+<td>
+<%= sportsHuber.firstName %> <a onClick="translateFirstName(<%=sportsHuber.id%>)" href="#"><i class="fa fa-globe"></i></a>
+</td>
+<td>
+<%= sportsHuber.lastName %><a onClick="translateLastName(<%=sportsHuber.id%>)" href="#"><i class="fa fa-globe"></i></a>
+</td>
+<td> <%=sportsHuber.nationality?sportsHuber.nationality.name:'' %></td>
+<td> <%=sportsHuber.mobile %></td>
+<td> <%=sportsHuber.email %></td>
+<td>
+<a href="/sportsHuber/delete?id=<%=sportsHuber.id%>" onclick="return confirm('Are you sure?')"><span class="icon icon-trash"></span></a> |
+<a href="#" onclick="editSportsHuber(<%=sportsHuber.id%>,'<%=sportsHuber.firstName%>')"><span class="icon icon-pencil"></span></a>
+</td>
+</tr>
+<% }) %>
+</table>
+</div>
+<script type="text/javascript">
+	function translateFirstName(id) {
+		translate('sportsHuber',id,'firstName');
+	}
+	function translateLastName(id) {
+		translate('sportsHuber',id,'lastName');
+	}
+	function editSportsHuber(id,name){
+		$("#firstName").val(name);
+		$("#lastName").val(name);
+		$("#id").val(id);
+		$("#reset").show();
+	}
+	function resetForm(){
+		$("#firstName").val("");
+		$("#lastName").val("");
+		$("#id").val("");
+		$("#reset").hide();
+	}
+</script>
+
+<% include ../dictionary/form %>

@@ -1,0 +1,183 @@
+<script type="text/javascript">
+
+	var viewModel;
+	var translations = [];
+	
+
+	$(document).ready(function() {
+		// select all elements with translatable class
+		$(".translatable" ).each(function() {
+		  $(this).append(' <a onClick="translate' + $(this).attr('translate-field') +'(' + $(this).attr('translate-id') +')" href="#"><i class="fa fa-globe"></i>');
+		});
+		
+		
+		ko.validation.rules.pattern.message = 'Invalid.';
+
+		ko.validation.init({
+			registerExtenders: true,
+			messagesOnModified: true,
+			insertMessages: true,
+			parseInputAttributes: true,
+			messageTemplate: null
+		}, true);
+	
+		var MainViewModel = function(translations) {
+			var self = this;
+			self.terms = ko.observableArray();
+			self.languages = ko.observableArray();
+			self.deleted = ko.observableArray();
+			self.newId = ko.observable();
+			self.newObjectType = ko.observable();
+			self.newObjectId = ko.observable();
+			self.newField = ko.observable();
+			self.newLanguage = ko.observable().extend({required:{message: 'Please select language'}});
+			self.newTranslation = ko.observable().extend({required: { message: 'Please provide translation'}});
+			
+			$.each(translations, function(index,term){
+				this.terms.push(term);
+			});
+			this.addTerm = function(term) {
+				this.terms.push(term);
+			};
+			this.removeTerm = function(term) { 
+				$("#translationMessage").hide();
+				if (confirm("are you sure?")){
+					self.terms.remove(term) 
+					self.deleted.push(term.id);
+					$("#translationMessage").html("[" + term.translation+ "] is deleted, you need to save changes");
+					$("#translationMessage").show();
+				}
+			};
+			this.createTerm = function() {
+				$("#translationMessage").hide();
+				if(viewModel.errors().length>0) {
+					viewModel.errors.showAllMessages();
+					return;
+				}
+				var terms = ko.toJS(viewModel.terms);
+				var newLanguage = this.newLanguage();
+				var newTranslation = this.newTranslation();				
+				var validation = true;
+				$.each(terms, function(index,term){
+					if(newLanguage == term.language){
+						validation = false;
+						return;
+					}
+				});
+				if(!validation) {
+					$("#translationMessage").html("[" + newLanguage + "] language already exit");
+					$("#translationMessage").show();
+					return;
+				}
+				var term ={ objectType: this.newObjectType(),objectId:this.newObjectId(),field:this.newField(),language:this.newLanguage(),translation:this.newTranslation()};
+				console.log(term);
+				self.terms.push(term);
+        		self.newTranslation("");
+        		//self.newLanguage("");
+        		$("#translationMessage").html("[" + newTranslation + "] is added, you need to save changes");
+				$("#translationMessage").show();
+			};
+			
+			this.clear = function(){
+				this.terms.removeAll();
+				this.deleted.removeAll();
+			};
+			
+			
+			
+		}
+		viewModel = new MainViewModel(translations);
+		viewModel.errors = ko.validation.group(viewModel);
+		ko.applyBindings(viewModel);
+	});
+
+		
+	function translate(objectType,objectId, field){
+		$.get('/dictionary/translate', {objectType:objectType,objectId:objectId,field:field}, function( data ) {
+			viewModel.newObjectId(objectId);
+			viewModel.newObjectType(objectType);
+			viewModel.newField(field);
+			viewModel.clear();
+			var array = viewModel.terms();
+			ko.utils.arrayPushAll(array, data.terms);
+			viewModel.terms.valueHasMutated();
+			// load languages
+			if(viewModel.languages().length==0){
+				var languagesArray = viewModel.languages();
+				ko.utils.arrayPushAll(languagesArray, data.languages);
+				viewModel.languages.valueHasMutated();
+			}			
+			$("#translationMessage").hide();
+			$('#myModal').modal('show');  
+		});
+	}
+
+	function saveTerms(){
+		$('#myModal').modal('hide');
+		var jsonData = JSON.parse(ko.toJSON(viewModel));
+		$.post( "/dictionary/create",jsonData, function( data ) {		   
+		}, "json");
+		
+	}
+</script>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Translation</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="alert alert-info" style="display: none" id="translationMessage"></div>
+        <div data-bind="foreach: terms">
+        	<input type="hidden" data-bind="value: translation"/>
+        	<div class="row">
+            <div class="col-sm-1"> in </div> 
+            <div class="col-sm-2"> <span data-bind="attr:{class: 'img-thumbnail flag flag-icon-background flag-icon flag-icon-' + language}"></span> <span data-bind="text: language"></span></div>
+            <div class="col-sm-1"> is </div> 
+            <div class="col-sm-3" data-bind="text: translation"></div>
+            <div class="col-sm-3"><input type="text" class="form-control" data-bind="value: translation"/>
+            </div>
+            <div class="col-sm-1">
+            <a href="#" data-bind="click: $parent.removeTerm"><span class="pull-left icon icon-trash"></span></a>
+            </div>
+       	 	</div>
+        </div
+
+        <form data-bind="submit: createTerm">
+        	<div class="row">
+        	<div class="col-sm-1"> in </div> 
+            <div class="col-sm-2"> 
+            	<!--
+            	<select data-bind="optionsCaption: 'Choose language...',valueAllowUnset: true ,value: newLanguage" >
+            	<option value="">Choose ...</option>
+            	<option value="ae">Arabic</option>
+            	<option value="gb">English</option>            	
+            	<option value="fr">French</option>
+            	<option value="it">Italian</option>
+            	</select>
+            	-->
+            	<select id="selectedLang" data-bind="options: languages,
+                       optionsText: 'name',
+                       optionsValue: 'id',
+                       value: newLanguage,
+                       valueAllowUnset: true,
+                       optionsCaption: 'Choose...'"></select>
+            	
+            </div>
+            <div class="col-sm-1"> is </div> 
+            <div class="col-sm-6"><input type="text" class="form-control" data-bind="value: newTranslation"/></div>
+            <div class="col-sm-1"> <button class="btm btn-success" data-bind="click: createTerm" type="submit">Add</button></div>
+			</div>
+		</form>
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onClick="saveTerms()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

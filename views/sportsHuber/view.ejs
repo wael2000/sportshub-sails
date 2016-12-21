@@ -1,0 +1,46 @@
+<div>
+<% if(!msg || msg=="") { %>
+<div class="alert alert-success" style="display: none" id="infoMessage"><%=msg%></div>
+<% } else { %>
+<div class="alert alert-success" id="infoMessage"><%=msg%></div>
+<% }  %>
+<h3> SportsHuber Details</h3>
+
+
+<div class="row">
+<div class="form-group col-sm-4">
+	<label for="firstName">First Name </label>
+	<div class="form-control"><%-sportsHuber.firstName%></div>
+</div>
+<div class="form-group col-sm-4">
+	<label for="lastName">Last Name </label>
+	<div class="form-control"><%-sportsHuber.lastName%></div>
+</div>
+</div>
+<div class="row">
+<div class="form-group col-sm-4">
+	<label for="name">Gender </label>
+	<div class="form-control"><%-sportsHuber.gender%></div>
+</div>
+<div class="form-group col-sm-4">
+	<label for="name">Birthday </label>
+	<div class="form-control"><%-sportsHuber.localizedBirthday()%></div>
+</div>
+<div class="form-group col-sm-4">
+	<label for="name">Nationality </label>
+	<div class="form-control"> <%-sportsHuber.nationality?sportsHuber.nationality.translateName():'' %></div>
+</div>
+</div>
+
+<div class="row">
+<div class="form-group col-sm-4">
+	<label for="name">Email</label>
+	<div class="form-control"><%-sportsHuber.email%> </div>
+</div>
+
+<div class="form-group col-sm-4">
+	<label for="name">Mobile</label>
+	<div class="form-control"><%-sportsHuber.mobile%></div>
+</div>
+</div>
+</div>

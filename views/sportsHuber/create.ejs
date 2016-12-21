@@ -1,0 +1,19 @@
+<div>
+<% if(msg=="") { %>
+<div class="alert alert-info" style="display: none" id="infoMessage"><%=msg%></div>
+<% } else { %>
+<div class="alert alert-info" id="infoMessage"><%=msg%></div>
+<% }  %>
+<h3> New SportsHuber </h3>
+	<% if(flash && flash.err) { %>
+		<ul class="alert">
+		<% Object.keys(flash.err).forEach(function(error) { 
+			Object.keys(flash.err[error]).forEach(function(rule){
+		%>
+		<li><%- flash.err[error][rule].message %></li>
+		<% }) %>
+		<% }) %>
+		</ul>
+	<% } %>
+<% include form %>
+</div>

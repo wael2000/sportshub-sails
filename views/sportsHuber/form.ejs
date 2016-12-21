@@ -1,0 +1,114 @@
+<form action="/sportsHuber/save" method="post">
+<input name="id" id="id" type="hidden">
+
+<div class="row">
+<div class="form-group col-sm-4">
+	<label for="name">First Name *</label>
+	<input required="true" type="text" name="firstName" class="<%-(flash && flash.err && flash.err.hasOwnProperty('firstName'))?'has-error':'' %> form-control" id="firstName" placeholder="SportsHuber First Name" value="<%-sportsHuber.firstName%>">
+</div>
+<div class="form-group col-sm-4">
+	<label for="name">Last Name *</label>
+	<input required="true" type="text" name="lastName" class="<%-(flash && flash.err && flash.err.hasOwnProperty('lastName'))?'has-error':'' %> form-control" id="lastName" placeholder="SportsHuber Last Name" value="<%-sportsHuber.lastName%>">
+</div>
+</div>
+<div class="row">
+<div class="form-group col-sm-2">
+	<label for="gender">Gender </label>
+	<select name="gender" class="form-control">
+		<option value="male" <%-(sportsHuber.gender=='male')?'selected':''%>>Male</option>
+		<option value="female" <%-(sportsHuber.gender=='female')?'selected':''%>>Female</option>
+	</select>
+</div>
+<div class="form-group col-sm-2">
+	<label for="name">Birthday </label>
+	<input type="text" name="birthday" class="form-control" placeholder="Birthday">
+</div>
+<div class="form-group col-sm-8">
+	<label for="name">Nationality </label>
+	<select name="nationality" class="form-control">
+		<% if (data.countries.length) { %>
+			<% data.countries.forEach(function(country){ %>
+				<option value="<%=country.id%>" <%-(sportsHuber.nationality==country.id)?'selected':''%>><%=country.translateName()%></option>
+			<% }) %>
+		<% } %>
+	</select>
+</div>
+</div>
+
+
+<div class="row">
+
+
+<div class="form-group col-sm-6">
+
+<div class="row">
+<div class="form-group col-sm-12">
+	<label for="name">Email</label>
+	<input type="text" name="email" class="form-control" value="<%-sportsHuber.email%>">
+</div>
+</div>
+
+
+<div class="row">
+<div class="form-group col-sm-12">
+	<label for="mobile">Personal Mobile</label>
+	<input type="text" name="mobile" class="form-control" value="<%-sportsHuber.mobile%>">
+</div>
+</div>
+
+
+<div class="row">
+<div class="form-group col-sm-4">
+	<label for="name">Notification Method</label>
+	<div>
+	<label>
+	 <input name="communicateNotification" value="1" checked="" type="checkbox">
+	 Notification
+	 </label>
+
+	 <label>
+	 <input name="communicateSMS" value="1" checked="" type="checkbox">
+	 SMS
+	 </label>
+
+	 <label>
+	 <input name="communicateEmail" value="1" type="checkbox">
+	 Email
+	 </label>
+	</div>
+
+	</div>
+
+	<div class="form-group col-sm-4">
+	<label for="name">Notification Language</label>
+
+	<select name="notificationLanguage" class="form-control">
+		<option value='null'>Select ... </option>
+		<% if (data.languages.length) { %>
+			<% data.languages.forEach(function(language){ %>
+				<option value="<%=language.id%>" <%-(sportsHuber.notificationLanguage==language.id)?'selected':''%>><%=language.name%></option>
+			<% }) %>
+		<% } %>
+	</select>
+	</div>
+</div>
+
+</div>
+<div class="form-group col-sm-4">
+	<div class="panel  panel-default">
+	<div class="panel-heading">Personal Photo</div>
+	<div class="panel-body">
+	<img src="/images/default_profile.png">
+	<input name="profile_photo" value="default_profile.png" class="default" type="file">
+	</div>
+	</div>
+</div>
+</div>
+
+
+<input class="btn btn-success" type="submit" value="Save">
+</form>
+
+<script type="text/javascript">
+
+</script>
