@@ -45,7 +45,10 @@ module.exports = {
 		sportsHuber : {
 			model : 'sportsHuber',
 			columnName: 'object_id'
+		},
+		sport : {
+			model : 'sport',
+			columnName: 'object_id'
 		}
   }
 };
-

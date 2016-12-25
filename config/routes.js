@@ -41,10 +41,12 @@ module.exports.routes = {
   'get /sportsHuber/create' : 'SportsHuber.create',
   'post /sportsHuber/save' : 'SportsHuber.save',
 
-   'get /registeration/requestOTP' : 'Registeration.requestOTP',
-   'get /registeration/resendOTP' : 'Registeration.resendOTP',
-   'get /registeration/register' : 'Registeration.register'
+  'get /sport/create' : 'Sport.create',
+  'post /sport/save' : 'Sport.save',
 
+  'get /registeration/requestOTP' : 'Registeration.requestOTP',
+  'get /registeration/resendOTP' : 'Registeration.resendOTP',
+  'get /registeration/register' : 'Registeration.register'
 
   /***************************************************************************
   *                                                                          *

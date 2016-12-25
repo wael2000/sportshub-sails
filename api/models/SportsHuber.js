@@ -94,6 +94,10 @@ module.exports = _.merge({}, baseModel, {
 			collection :'dictionary',
 			via : 'sportsHuber'
 		},
+    sports : {
+			collection :'sportsHuberSport',
+			via : 'sportsHuber'
+		},
     otp : {
       model : 'oneTimePassword',
       columnName: 'otp_id',

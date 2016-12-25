@@ -1,8 +1,13 @@
 // NotificationService.js - in api/services
 var plivo = require('plivo');
+var clicksend = require('clicksend');
 
 module.exports = {
-  sendSMS : function(msg) {
+  sendSms: function (messages, callback) {
+      clicksend.SMSController.sendSms(messages, callback);
+   },
+
+  sendSMSPlivo : function(msg) {
     var p = plivo.RestAPI({
       authId: 'MAZTA5ZTA3YWIYYTCZMM',
       authToken: 'ZDJkMmVmOTEwMTViMTFmODBlN2M4OTk2YjBmZTg0'

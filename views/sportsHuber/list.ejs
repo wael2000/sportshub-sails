@@ -30,7 +30,7 @@
 <%_.each(sportsHubers, function(sportsHuber) { %>
 <tr>
 <td>
-<%= sportsHuber.id %>
+	<a href="/sportsHuber/view?id=<%=sportsHuber.id%>"><%=sportsHuber.id %></a>
 </td>
 <td>
 <%= sportsHuber.firstName %> <a onClick="translateFirstName(<%=sportsHuber.id%>)" href="#"><i class="fa fa-globe"></i></a>

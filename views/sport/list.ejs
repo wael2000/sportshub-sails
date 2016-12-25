@@ -1,0 +1,58 @@
+<div>
+<% if(msg=="") { %>
+<div class="alert alert-info" style="display: none" id="infoMessage"><%=msg%></div>
+<% } else { %>
+<div class="alert alert-info" id="infoMessage"><%=msg%></div>
+<% }  %>
+<h3> Sports </h3>
+<form action="/sportsHuber/list" method="post">
+<div class="form-group">
+	<label for="name">Name </label>
+	<input value="<%=search?search:''%>" name="search" class="form-control" id="search" placeholder="Search by Name">
+	<input name="id" id="id" type="hidden">
+</div>
+<input class="btn btn-success" type="submit" value="Search">
+<a href="/sport/create" class="btn btn-info">New</a>
+</form>
+</div>
+<div>
+<h3> Sports List </h3>
+<table class="table table-stripped" id="myTable">
+<tr class="info">
+<th> ID </th>
+<th> Name </th>
+<th></th>
+</tr>
+<%_.each(sports, function(sport) { %>
+<tr>
+<td>
+<%= sport.id %>
+</td>
+<td>
+<%= sport.name %> <a onClick="translateName(<%=sport.id%>)" href="#"><i class="fa fa-globe"></i></a>
+</td>
+<td>
+<a href="/sport/delete?id=<%=sport.id%>" onclick="return confirm('Are you sure?')"><span class="icon icon-trash"></span></a> |
+<a href="#" onclick="editSport(<%=sport.id%>,'<%=sport.name%>')"><span class="icon icon-pencil"></span></a>
+</td>
+</tr>
+<% }) %>
+</table>
+</div>
+<script type="text/javascript">
+	function translateName(id) {
+		translate('sport',id,'name');
+	}
+	function editSportsHuber(id,name){
+		$("#name").val(name);
+		$("#id").val(id);
+		$("#reset").show();
+	}
+	function resetForm(){
+		$("#name").val("");
+		$("#id").val("");
+		$("#reset").hide();
+	}
+</script>
+
+<% include ../dictionary/form %>

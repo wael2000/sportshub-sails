@@ -42,6 +42,11 @@ module.exports = {
 					callback(null, languages);
 				});
 			},
+			sports : function(callback){
+				Sport.find({}).exec(function(err,sports){
+					callback(null, sports);
+				});
+			}
 		},
 		function(err, results){
 			res.view({sportsHuber:res.locals.flash?res.locals.flash.params:{pa:{}},msg:'',data:results});
@@ -55,12 +60,16 @@ module.exports = {
 		SportsHuber.findOne(params.id).exec(function(err,sportsHuber){
 			async.parallel({
 				nationality: function(callback){
-					Country.findOne(sportsHuber.nationality).exec(function(err,nationality){
-						Dictionary.find({objectType:'country',objectId:nationality.id, field:'name'},function(err,terms){
-							nationality.translations = terms;
-							callback(null, nationality);
+					if(sportsHuber.nationality) {
+						Country.findOne(sportsHuber.nationality).exec(function(err,nationality){
+							Dictionary.find({objectType:'country',objectId:nationality.id, field:'name'},function(err,terms){
+								nationality.translations = terms;
+								callback(null, nationality);
+							});
 						});
-					});
+				} else
+					callback(null, null);
+
 				}
 			},
 			function(err, associations) {

@@ -23,7 +23,7 @@ module.exports = {
 						if(err) {
 							callback({"response":"error", "message" : "Can't register mobile, try again later","mobile": mobile});
 						} else {
-							callback({"response":"otp_sent", "message" : "OTP is sent to mobile","opt": otp});
+							callback({"response":"otp_sent", "message" : "OTP is sent to mobile","otp": otp});
 					  }
 				});
 			}
